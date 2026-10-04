@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f5ee">
+    <meta name="description" content="Пелюстка — сучасна квіткова майстерня у Києві. Тюльпани, троянди та букети з доставкою і самовивозом.">
+    <title>Пелюстка — квіткова майстерня у Києві</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #f5f5ee;
+            --ink: #19251d;
+            --green: #203d2c;
+            --green-2: #305b3a;
+            --acid: #d6fb68;
+            --muted: #73796f;
+            --line: #dedfd5;
+            --orange: #ee7757;
+            --mono: "DM Mono", monospace;
+            --sans: "Manrope", sans-serif;
+            --serif: "Playfair Display", Georgia, serif;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+        body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+        body.locked { overflow: hidden; }
+        a { color: inherit; text-decoration: none; }
+        button, input, select, textarea { font: inherit; }
+        button { color: inherit; }
+        .announcement { display: flex; justify-content: center; gap: 12px; padding: 9px 16px; color: var(--paper); background: var(--green); font: 10px var(--mono); letter-spacing: .04em; text-align: center; }
+        .announcement span { color: var(--acid); }
+        .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid rgba(25,37,29,.1); background: rgba(245,245,238,.94); backdrop-filter: blur(14px); }
+        .nav { width: min(1320px, calc(100% - 64px)); height: 76px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+        .brand { display: inline-flex; align-items: center; gap: 11px; flex-shrink: 0; font-size: 22px; font-weight: 800; letter-spacing: -.07em; }
+        .brand-mark { display: grid; width: 33px; height: 33px; place-items: center; color: var(--acid); background: var(--green); border-radius: 50%; font: 21px var(--serif); }
+        .nav-links { display: flex; align-items: center; gap: 30px; color: #50574d; font-size: 12px; font-weight: 600; }
+        .nav-links a:hover, .footer-links a:hover { color: var(--green-2); }
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
+        .open-cart { min-height: 42px; padding: 0 15px; border: 1px solid var(--line); border-radius: 2px; background: transparent; cursor: pointer; font-size: 12px; font-weight: 700; }
+        .cart-count { display: inline-grid; width: 21px; height: 21px; margin-left: 7px; place-items: center; border-radius: 50%; background: var(--acid); font: 10px var(--mono); }
+        .menu-toggle { display: none; width: 42px; height: 42px; border: 1px solid var(--line); background: transparent; cursor: pointer; font-size: 19px; }
+        .hero { position: relative; overflow: hidden; color: var(--paper); background: var(--green); }
+        .hero::before { position: absolute; inset: 0; background-image: linear-gradient(90deg, rgba(22,43,30,.97) 0%, rgba(22,43,30,.86) 45%, rgba(22,43,30,.13) 100%), url("https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=2000&q=85"); background-position: center, center 46%; background-size: cover; content: ""; }
+        .hero::after { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(214,251,104,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(214,251,104,.055) 1px, transparent 1px); background-size: 54px 54px; mask-image: linear-gradient(90deg, black, transparent 85%); content: ""; }
+        .hero-inner { position: relative; z-index: 1; width: min(1320px, calc(100% - 64px)); min-height: 570px; margin: auto; padding: 93px 0 76px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+        .eyebrow { display: flex; align-items: center; gap: 10px; font: 10px var(--mono); letter-spacing: .055em; text-transform: uppercase; }
+        .eyebrow::before { width: 21px; height: 1px; background: var(--acid); content: ""; }
+        .hero h1 { max-width: 700px; margin: 24px 0 20px; font: 500 clamp(55px, 8vw, 102px)/.98 var(--serif); letter-spacing: 0; }
+        .hero h1 em { color: var(--acid); font-weight: 500; }
+        .hero-copy { max-width: 405px; margin: 0; color: rgba(245,245,238,.76); font-size: 13px; line-height: 1.9; }
+        .hero-bottom { width: min(440px, 100%); margin-top: 38px; display: flex; align-items: center; gap: 22px; }
+        .button-primary { display: inline-flex; min-height: 49px; padding: 0 22px; align-items: center; justify-content: center; gap: 16px; border: 0; border-radius: 2px; color: var(--ink); background: var(--acid); cursor: pointer; font-size: 11px; font-weight: 800; transition: background .2s, transform .2s; }
+        .button-primary:hover { background: #e3ffa0; transform: translateY(-2px); }
+        .hero-note { color: rgba(245,245,238,.69); font: 10px/1.6 var(--mono); }
+        .hero-stamp { position: absolute; right: 1%; bottom: 47px; width: 92px; height: 92px; display: grid; place-content: center; border: 1px solid rgba(214,251,104,.8); border-radius: 50%; color: var(--acid); text-align: center; transform: rotate(10deg); }
+        .hero-stamp span { font: 8px/1.7 var(--mono); text-transform: uppercase; }
+        .ticker { overflow: hidden; border-bottom: 1px solid var(--line); background: #eceee5; }
+        .ticker-track { width: max-content; min-height: 48px; display: flex; align-items: center; gap: 28px; animation: ticker 38s linear infinite; }
+        .ticker-track span { font: 10px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+        .ticker-track b { color: #7d9946; font-size: 14px; }
+        @keyframes ticker { to { transform: translateX(-50%); } }
+        .section { width: min(1320px, calc(100% - 64px)); margin: auto; padding: 92px 0; }
+        .section-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: 31px; }
+        .section-label { margin: 0 0 11px; color: var(--green-2); font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+        .section h2 { margin: 0; font: 500 clamp(37px, 5vw, 59px)/1.08 var(--serif); letter-spacing: 0; }
+        .section-description { max-width: 330px; margin: 0 0 4px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+        .catalog-tools { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 32px 0 24px; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .filter-group { display: flex; flex-wrap: wrap; gap: 7px; }
+        .filter-button { min-height: 36px; padding: 0 13px; border: 1px solid transparent; border-radius: 2px; color: #74796f; background: transparent; cursor: pointer; font: 10px var(--mono); transition: color .2s, background .2s, border-color .2s; }
+        .filter-button:hover { border-color: var(--line); color: var(--ink); }
+        .filter-button.active { color: var(--paper); background: var(--green); }
+        .search-wrap { min-width: 213px; display: flex; align-items: center; gap: 9px; padding: 0 2px 6px; border-bottom: 1px solid #c8cbc0; }
+        .search-wrap span { color: var(--green-2); font-size: 15px; }
+        .search-wrap input { width: 100%; padding: 4px 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 11px; }
+        .catalog-meta { margin: 0 0 17px; display: flex; justify-content: space-between; color: var(--muted); font: 10px var(--mono); }
+        .product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 34px 20px; }
+        .product-card { min-width: 0; animation: card-in .35s both; }
+        @keyframes card-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .product-photo { position: relative; overflow: hidden; aspect-ratio: 4/4.6; background: #e5e7dd; }
+        .product-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .55s cubic-bezier(.2,.8,.2,1); }
+        .product-card:hover .product-photo img { transform: scale(1.045); }
+        .product-tag { position: absolute; top: 11px; left: 11px; padding: 7px 9px; color: var(--green); background: var(--paper); font: 8px var(--mono); text-transform: uppercase; }
+        .product-code { position: absolute; right: 11px; bottom: 11px; padding: 7px 9px; color: white; background: rgba(25,37,29,.76); font: 8px var(--mono); }
+        .product-info { padding-top: 13px; }
+        .product-category { margin: 0 0 7px; color: var(--green-2); font: 9px var(--mono); text-transform: uppercase; }
+        .product-name-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+        .product-name { margin: 0; font: 500 19px var(--serif); }
+        .product-price { flex-shrink: 0; font: 11px var(--mono); }
+        .product-description { margin: 7px 0 13px; color: var(--muted); font-size: 10px; }
+        .add-button { width: 100%; min-height: 38px; display: flex; align-items: center; justify-content: space-between; padding: 0 11px; border: 1px solid #cfd2c7; border-radius: 2px; background: transparent; cursor: pointer; font-size: 10px; font-weight: 700; transition: color .2s, background .2s, border-color .2s; }
+        .add-button span:last-child { color: var(--green-2); font-size: 16px; }
+        .add-button:hover { border-color: var(--green); color: var(--paper); background: var(--green); }
+        .add-button:hover span:last-child { color: var(--acid); }
+        .empty-state { grid-column: 1/-1; padding: 55px 20px; color: var(--muted); text-align: center; font-size: 13px; }
+        .story-band { color: var(--paper); background: var(--green); }
+        .story-inner { width: min(1320px, calc(100% - 64px)); margin: auto; padding: 78px 0; display: grid; grid-template-columns: 1.15fr .85fr; align-items: center; gap: 70px; }
+        .story-copy .section-label { color: var(--acid); }
+        .story-copy h2 { max-width: 620px; margin: 0 0 20px; font: 500 clamp(39px, 5vw, 63px)/1.06 var(--serif); }
+        .story-copy h2 em { color: var(--acid); }
+        .story-copy > p:last-of-type { max-width: 470px; color: rgba(245,245,238,.74); font-size: 12px; line-height: 1.9; }
+        .story-link { display: inline-flex; margin-top: 17px; padding-bottom: 6px; gap: 15px; border-bottom: 1px solid var(--acid); color: var(--acid); font: 10px var(--mono); }
+        .story-image { position: relative; min-height: 310px; background: #dce3cf url("https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1000&q=80") center 48%/cover; }
+        .story-image::after { position: absolute; right: -11px; bottom: -11px; width: 45%; height: 45%; border-right: 1px solid var(--acid); border-bottom: 1px solid var(--acid); content: ""; }
+        .story-caption { position: absolute; right: 11px; bottom: 12px; padding: 7px 9px; color: white; background: rgba(25,37,29,.72); font: 8px var(--mono); }
+        .services { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .service { min-height: 175px; padding: 30px 27px 30px 0; }
+        .service + .service { padding-left: 27px; border-left: 1px solid var(--line); }
+        .service-index { margin-bottom: 23px; color: var(--green-2); font: 10px var(--mono); }
+        .service h3 { margin: 0 0 10px; font: 500 22px var(--serif); }
+        .service p { max-width: 300px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+        .team-section { background: #eceee5; }
+        .team-inner { width: min(1320px, calc(100% - 64px)); margin: auto; padding: 83px 0; }
+        .team-grid { margin-top: 35px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .team-card { border-top: 1px solid #cdd1c4; }
+        .team-photo { overflow: hidden; aspect-ratio: 4/4.2; background: #d9ded1; }
+        .team-photo img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.75); transition: transform .5s; }
+        .team-card:hover .team-photo img { transform: scale(1.04); }
+        .team-role { margin: 13px 0 5px; color: var(--green-2); font: 9px var(--mono); text-transform: uppercase; }
+        .team-name { margin: 0; font: 500 20px var(--serif); }
+        .team-bio { margin: 7px 0 0; color: var(--muted); font-size: 10px; line-height: 1.7; }
+        .location { width: min(1320px, calc(100% - 64px)); margin: auto; padding: 89px 0; }
+        .location-grid { margin-top: 32px; display: grid; grid-template-columns: .73fr 1.27fr; gap: 40px; align-items: stretch; }
+        .address-panel { display: flex; flex-direction: column; justify-content: space-between; padding: 7px 0; }
+        .address-block + .address-block { margin-top: 23px; }
+        .address-label { margin: 0 0 9px; color: var(--green-2); font: 9px var(--mono); text-transform: uppercase; }
+        .address-value { margin: 0; font: 500 21px/1.55 var(--serif); }
+        .address-detail { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+        .map-frame { min-height: 360px; border: 0; background: #e6e8de; filter: saturate(.68) contrast(.98); }
+        .map-frame iframe { width: 100%; height: 100%; min-height: 360px; display: block; border: 0; }
+        .site-footer { color: var(--paper); background: #19251d; }
+        .footer-inner { width: min(1320px, calc(100% - 64px)); margin: auto; padding: 48px 0 23px; }
+        .footer-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 30px; padding-bottom: 35px; }
+        .footer-brand .brand { color: var(--paper); }
+        .footer-brand p { max-width: 260px; margin: 12px 0 0; color: rgba(245,245,238,.63); font-size: 10px; line-height: 1.8; }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 25px; padding-top: 8px; color: rgba(245,245,238,.75); font-size: 10px; }
+        .footer-links a:hover { color: var(--acid); }
+        .footer-bottom { display: flex; justify-content: space-between; gap: 15px; padding-top: 17px; border-top: 1px solid rgba(245,245,238,.15); color: rgba(245,245,238,.5); font: 9px var(--mono); }
+        .cart-backdrop, .modal-backdrop { position: fixed; z-index: 39; inset: 0; visibility: hidden; background: rgba(14,24,17,.48); opacity: 0; transition: opacity .25s, visibility .25s; }
+        .cart-backdrop.visible, .modal-backdrop.visible { visibility: visible; opacity: 1; }
+        .cart-panel { position: fixed; z-index: 40; inset: 0 0 0 auto; width: min(440px, 100%); padding: 27px; display: flex; flex-direction: column; background: var(--paper); transform: translateX(100%); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+        .cart-panel.open { transform: translateX(0); }
+        .cart-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+        .cart-header h2, .modal-title { margin: 0; font: 500 32px var(--serif); }
+        .icon-button { width: 39px; height: 39px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; font-size: 19px; }
+        .cart-items { flex: 1; overflow: auto; padding: 8px 0; }
+        .cart-empty { padding: 50px 10px; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.8; }
+        .cart-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 13px; padding: 15px 0; border-bottom: 1px solid var(--line); }
+        .cart-item img { width: 64px; height: 72px; object-fit: cover; }
+        .cart-item-name { margin: 2px 0 5px; font: 500 16px var(--serif); }
+        .cart-item-detail { color: var(--muted); font: 9px var(--mono); }
+        .quantity-control { margin-top: 9px; display: inline-flex; align-items: center; border: 1px solid var(--line); }
+        .quantity-control button { width: 27px; height: 26px; border: 0; background: transparent; cursor: pointer; }
+        .quantity-control span { min-width: 24px; text-align: center; font: 9px var(--mono); }
+        .cart-item-total { padding-top: 3px; text-align: right; font: 10px var(--mono); }
+        .remove-item { display: block; margin: 10px 0 0 auto; padding: 0; border: 0; color: var(--muted); background: transparent; cursor: pointer; font-size: 9px; }
+        .cart-footer { padding-top: 17px; border-top: 1px solid var(--line); }
+        .cart-total-row { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 11px; }
+        .cart-total-row strong { font: 14px var(--mono); }
+        .checkout-button { width: 100%; }
+        .modal-backdrop { z-index: 49; display: grid; place-items: center; padding: 20px; }
+        .checkout-modal { width: min(490px, 100%); max-height: min(90vh, 740px); overflow: auto; padding: 29px; background: var(--paper); transform: translateY(12px); transition: transform .25s; }
+        .modal-backdrop.visible .checkout-modal { transform: translateY(0); }
+        .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 8px; }
+        .modal-copy { margin: 0 0 20px; color: var(--muted); font-size: 11px; line-height: 1.8; }
+        .checkout-form { display: grid; gap: 13px; }
+        .form-field { display: grid; gap: 6px; color: #565e53; font: 9px var(--mono); text-transform: uppercase; }
+        .form-field input, .form-field select, .form-field textarea { width: 100%; min-height: 43px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; outline: none; color: var(--ink); background: transparent; font: 11px var(--sans); text-transform: none; }
+        .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--green-2); }
+        .form-field textarea { min-height: 76px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-submit { width: 100%; margin-top: 4px; }
+        .toast { position: fixed; z-index: 60; right: 24px; bottom: 24px; max-width: min(380px, calc(100% - 48px)); padding: 15px 19px; color: var(--paper); background: var(--green); box-shadow: 0 8px 25px rgba(25,37,29,.2); font-size: 11px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        @media (max-width: 900px) {
+            .nav { width: calc(100% - 40px); }
+            .nav-links { gap: 17px; }
+            .section, .hero-inner, .story-inner, .team-inner, .location, .footer-inner { width: calc(100% - 40px); }
+            .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 15px; }
+            .story-inner { gap: 35px; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); row-gap: 25px; }
+        }
+        @media (max-width: 640px) {
+            .announcement { font-size: 8px; }
+            .nav { width: calc(100% - 32px); height: 65px; }
+            .brand { font-size: 20px; }
+            .nav-actions { gap: 8px; }
+            .open-cart { min-height: 39px; padding: 0 10px; font-size: 10px; }
+            .menu-toggle { display: grid; place-items: center; }
+            .nav-links { position: absolute; top: 64px; right: 0; left: 0; display: none; padding: 10px 20px 18px; flex-direction: column; align-items: stretch; gap: 0; border-bottom: 1px solid var(--line); background: var(--paper); }
+            .nav-links.open { display: flex; }
+            .nav-links a { padding: 12px 0; border-bottom: 1px solid var(--line); }
+            .hero::before { background-image: linear-gradient(90deg, rgba(22,43,30,.94), rgba(22,43,30,.66)), url("https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1100&q=80"); background-position: center, 58% center; }
+            .hero-inner { width: calc(100% - 40px); min-height: 495px; padding: 68px 0 62px; }
+            .hero h1 { font-size: clamp(53px, 14vw, 76px); }
+            .hero-copy { max-width: 330px; font-size: 12px; }
+            .hero-bottom { align-items: flex-start; flex-direction: column; gap: 14px; }
+            .hero-stamp { right: 0; bottom: 20px; width: 70px; height: 70px; }
+            .section, .story-inner, .team-inner, .location, .footer-inner { width: calc(100% - 40px); padding-top: 64px; padding-bottom: 64px; }
+            .section-top { align-items: flex-start; flex-direction: column; gap: 12px; }
+            .section-description { max-width: 100%; }
+            .catalog-tools { align-items: stretch; flex-direction: column-reverse; gap: 13px; }
+            .search-wrap { min-width: 0; }
+            .filter-group { gap: 3px; }
+            .filter-button { min-height: 33px; padding: 0 10px; }
+            .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 23px 11px; }
+            .product-name { font-size: 16px; }
+            .product-description { font-size: 9px; }
+            .product-photo { aspect-ratio: 4/4.8; }
+            .story-inner { grid-template-columns: 1fr; gap: 27px; }
+            .story-image { min-height: 270px; }
+            .services { grid-template-columns: 1fr; }
+            .service, .service + .service { min-height: auto; padding: 22px 0; border-left: 0; }
+            .service + .service { border-top: 1px solid var(--line); }
+            .service-index { margin-bottom: 11px; }
+            .team-grid { gap: 21px 11px; }
+            .team-name { font-size: 17px; }
+            .location-grid { grid-template-columns: 1fr; gap: 25px; }
+            .map-frame, .map-frame iframe { min-height: 300px; }
+            .footer-main { flex-direction: column; }
+            .footer-links { gap: 17px; }
+            .footer-bottom { flex-direction: column; }
+            .cart-panel { padding: 20px; }
+            .checkout-modal { padding: 23px; }
+        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+    </style>
+</head>
+<body>
+    <div class="announcement"><span>КИЇВ · ВЛАСНА КВІТКОВА МАЙСТЕРНЯ</span> ДОСТАВКА ВІД 1200 ₴ — БЕЗКОШТОВНО</div>
+    <header class="site-header">
+        <nav class="nav" aria-label="Головна навігація">
+            <a class="brand" href="#home" aria-label="Пелюстка — на головну"><span class="brand-mark">п</span>пелюстка<span style="color:var(--green-2)">.</span></a>
+            <div class="nav-links" id="navLinks">
+                <a href="#catalog">Каталог</a>
+                <a href="#about">Про нас</a>
+                <a href="#team">Команда</a>
+                <a href="#location">Контакти</a>
+            </div>
+            <div class="nav-actions">
+                <button class="open-cart" type="button" aria-label="Відкрити кошик">Кошик<span class="cart-count" id="cartCount">0</span></button>
+                <button class="menu-toggle" type="button" aria-label="Відкрити меню" aria-expanded="false" id="menuToggle">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-inner">
+                <p class="eyebrow">Квіткова майстерня · Київ</p>
+                <h1>Живі квіти.<br><em>Живі почуття.</em></h1>
+                <p class="hero-copy">Тюльпани й троянди, зібрані з любов’ю до деталей. Свіжий зріз, несподівані поєднання і маленька радість, що приїде просто до дверей.</p>
+                <div class="hero-bottom">
+                    <a class="button-primary" href="#catalog">Знайти свій букет <span>↘</span></a>
+                    <span class="hero-note">ЩОДНЯ НОВЕ ПОСТАЧАННЯ<br>З 08:00 ДО 20:00</span>
+                </div>
+                <div class="hero-stamp" aria-label="Свіжі квіти щодня"><span>свіжі квіти</span><span>щодня · 01/26</span></div>
+            </div>
+        </section>
+
+        <div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+
+        <section class="section" id="catalog">
+            <div class="section-top">
+                <div><p class="section-label">Добірка майстерні / 001</p><h2>Квіти з характером</h2></div>
+                <p class="section-description">Від одного стебла для себе до розкішного букета для когось особливого. Обирайте, а ми подбаємо про решту.</p>
+            </div>
+            <div class="catalog-tools">
+                <div class="filter-group" role="group" aria-label="Фільтр за видом квітів">
+                    <button class="filter-button active" data-filter="all" type="button">Усі квіти · 40</button>
+                    <button class="filter-button" data-filter="тюльпани" type="button">Тюльпани · 20</button>
+                    <button class="filter-button" data-filter="троянди" type="button">Троянди · 20</button>
+                </div>
+                <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Знайти улюблений сорт" aria-label="Пошук квітів"></label>
+            </div>
+            <div class="catalog-meta"><span id="resultCount">40 квіткових історій</span><span>ЗРІЗ СЬОГОДНІ · СВІЖІСТЬ 100%</span></div>
+            <div class="product-grid" id="productGrid" aria-live="polite"></div>
+        </section>
+
+        <section class="story-band" id="about">
+            <div class="story-inner">
+                <div class="story-copy">
+                    <p class="section-label">Про майстерню / з 2019 року</p>
+                    <h2>Не просто квіти.<br><em>Точне відчуття.</em></h2>
+                    <p>«Пелюстка» — незалежна київська майстерня, де флористика зустрічається з уважністю. Ми щодня приймаємо свіже постачання, сортуємо кожне стебло вручну й збираємо букети в момент замовлення. Без зайвого пластику — тільки квіти, тактильний папір і гарні емоції.</p>
+                    <a class="story-link" href="#team">Познайомитися з майстернею <span>↗</span></a>
+                </div>
+                <div class="story-image" role="img" aria-label="Рожеві тюльпани у квітковій майстерні"><span class="story-caption">50°27′N 30°31′E · KYIV</span></div>
+            </div>
+        </section>
+
+        <section class="section" aria-label="Наші послуги">
+            <div class="section-top"><div><p class="section-label">Від майстерні до дверей</p><h2>Квіти. Просто.</h2></div><p class="section-description">Піклуємося про ваш букет від ранкової поставки до найприємнішого моменту вручення.</p></div>
+            <div class="services">
+                <article class="service"><div class="service-index">01 / ДОСТАВКА</div><h3>Вчасно й дбайливо</h3><p>Доставляємо по Києву у зручний двогодинний проміжок. Ваші квіти приїдуть свіжими й захищеними.</p></article>
+                <article class="service"><div class="service-index">02 / САМОВИВІЗ</div><h3>Завітаєте на чай?</h3><p>Підготуємо замовлення, поки ви в дорозі. Зручний самовивіз із нашої майстерні на Хрещатику.</p></article>
+                <article class="service"><div class="service-index">03 / СЮРПРИЗ</div><h3>Без зайвих слів</h3><p>Додайте особисте побажання — вкладемо до букета вашу листівку й передамо турботу за вас.</p></article>
+            </div>
+        </section>
+
+        <section class="team-section" id="team">
+            <div class="team-inner">
+                <div class="section-top"><div><p class="section-label">Люди за кожною пелюсткою</p><h2>Наша майстерня</h2></div><p class="section-description">Кожен відповідає за свою справу — від першого стебла до чистого простору.</p></div>
+                <div class="team-grid">
+                    <article class="team-card"><div class="team-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=650&q=80" alt="Флористка Олена у квітковій майстерні"></div><p class="team-role">Флористка · продавчиня</p><h3 class="team-name">Олена Коваль</h3><p class="team-bio">Допоможе обрати букет і знайде квіти, які скажуть саме те, що потрібно.</p></article>
+                    <article class="team-card"><div class="team-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=650&q=80" alt="Флорист Андрій за роботою"></div><p class="team-role">Флорист · продавець</p><h3 class="team-name">Андрій Мельник</h3><p class="team-bio">Збирає букети з характером і перетворює сезонні квіти на відкриття.</p></article>
+                    <article class="team-card"><div class="team-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=650&q=80" alt="Сортувальниця Марія готує квіти"></div><p class="team-role">Сортувальниця квітів</p><h3 class="team-name">Марія Бондар</h3><p class="team-bio">Перевіряє кожне стебло, оновлює зріз і дбає, щоб квіти довше тішили.</p></article>
+                    <article class="team-card"><div class="team-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=650&q=80" alt="Прибиральниця майстерні пані Галина"></div><p class="team-role">Прибиральниця майстерні</p><h3 class="team-name">Пані Галина</h3><p class="team-bio">Піклується про чистоту, порядок і затишок у просторі, куди хочеться повертатися.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="location" id="location">
+            <div class="section-top"><div><p class="section-label">Ми тут / відчинені щодня</p><h2>Заходьте в гості</h2></div><p class="section-description">Оберіть букет на місці, заберіть замовлення або просто завітайте познайомитися.</p></div>
+            <div class="location-grid">
+                <div class="address-panel">
+                    <div>
+                        <div class="address-block"><p class="address-label">Адреса майстерні</p><p class="address-value">вул. Хрещатик, 22<br>Київ, Україна, 01001</p><p class="address-detail">Вхід із боку Пасажу, перший поверх.<br>Метро «Хрещатик» — 4 хвилини пішки.</p></div>
+                        <div class="address-block"><p class="address-label">Графік роботи</p><p class="address-value">Щодня · 08:00–20:00</p><p class="address-detail">Замовлення приймаємо також онлайн.</p></div>
+                        <div class="address-block"><p class="address-label">Зателефонувати</p><p class="address-value"><a href="tel:+380442371920">+38 (044) 237-19-20</a></p><p class="address-detail">Напишіть нам: hello@pelyustka.ua</p></div>
+                    </div>
+                    <a class="story-link" style="color:var(--green-2);border-color:var(--green-2)" href="https://maps.google.com/?q=Khreshchatyk+22+Kyiv" target="_blank" rel="noreferrer">Маршрут у Google Maps <span>↗</span></a>
+                </div>
+                <div class="map-frame"><iframe title="Мінімапа розташування квіткової майстерні на Хрещатику, 22, Київ" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Khreshchatyk%2022%2C%20Kyiv%2C%20Ukraine&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-main">
+                <div class="footer-brand"><a class="brand" href="#home"><span class="brand-mark">п</span>пелюстка<span style="color:var(--acid)">.</span></a><p>Квіткова майстерня у центрі Києва. Квіти — це мова, якою ми говоримо щодня.</p></div>
+                <div class="footer-links"><a href="#catalog">Каталог</a><a href="#about">Про нас</a><a href="#team">Команда</a><a href="#location">Як нас знайти</a><a href="tel:+380442371920">Зателефонувати</a></div>
+            </div>
+            <div class="footer-bottom"><span>© 2026 Пелюстка · Київ</span><span>ВИРОЩЕНО З ТУРБОТОЮ · ЗІБРАНО ВРУЧНУ</span></div>
+        </div>
+    </footer>
+
+    <div class="cart-backdrop" id="cartBackdrop"></div>
+    <aside class="cart-panel" id="cartPanel" aria-label="Ваш кошик" aria-hidden="true">
+        <div class="cart-header"><h2>Ваш кошик</h2><button class="icon-button" type="button" id="closeCart" aria-label="Закрити кошик">×</button></div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer"><div class="cart-total-row"><span>Разом</span><strong id="cartTotal">0 ₴</strong></div><button class="button-primary checkout-button" type="button" id="checkoutButton">Перейти до замовлення <span>↗</span></button></div>
+    </aside>
+
+    <div class="modal-backdrop" id="modalBackdrop" role="presentation">
+        <section class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-head"><h2 class="modal-title" id="modalTitle">Оформити замовлення</h2><button class="icon-button" type="button" id="closeModal" aria-label="Закрити форму">×</button></div>
+            <p class="modal-copy">Залиште контакти — наша флористка зателефонує, щоб узгодити доставку й побажання.</p>
+            <form class="checkout-form" id="checkoutForm">
+                <label class="form-field">Ваше ім’я<input name="name" required autocomplete="name" placeholder="Як до вас звертатися"></label>
+                <label class="form-field">Номер телефону<input name="phone" required type="tel" autocomplete="tel" placeholder="+380 00 000 00 00"></label>
+                <div class="form-row"><label class="form-field">Отримання<select name="delivery"><option value="Доставка">Доставка</option><option value="Самовивіз">Самовивіз із майстерні</option></select></label><label class="form-field">Коли?<select name="time"><option value="Якнайшвидше">Якнайшвидше</option><option value="Сьогодні, до обіду">Сьогодні, до обіду</option><option value="Сьогодні, після обіду">Сьогодні, після обіду</option><option value="Узгодити телефоном">Узгодити телефоном</option></select></label></div>
+                <label class="form-field">Побажання до замовлення<textarea name="note" placeholder="Адреса доставки або текст листівки"></textarea></label>
+                <button class="button-primary form-submit" type="submit">Підтвердити замовлення <span>↗</span></button>
+            </form>
+        </section>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+        const photoUrls = {
+            tulips: [
+                "https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1455659817273-f96807779a8a?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=720&q=80"
+            ],
+            roses: [
+                "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1494972308805-463bc619d34e?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1548094967-e25a127d1d6f?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1529257414772-1960b7bea4c8?auto=format&fit=crop&w=720&q=80",
+                "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&w=720&q=80"
+            ]
+        };
+        const sizes = [
+            { stems: 7, label: "Комплімент", multiplier: 1 },
+            { stems: 15, label: "Зізнання", multiplier: 2 },
+            { stems: 25, label: "Побачення", multiplier: 3.1 },
+            { stems: 51, label: "Велика любов", multiplier: 5.7 }
+        ];
+        const varieties = [
+            { type: "тюльпани", name: "Пінк імпрешн", base: 390, color: "Ніжно-рожеві", photo: 0 },
+            { type: "тюльпани", name: "Стронг голд", base: 350, color: "Сонячно-жовті", photo: 1 },
+            { type: "тюльпани", name: "Парадіз", base: 420, color: "Бузково-білі", photo: 2 },
+            { type: "тюльпани", name: "Ред дрес", base: 390, color: "Насичено-червоні", photo: 3 },
+            { type: "тюльпани", name: "Вайт паррот", base: 450, color: "Пелюсткові білі", photo: 4 },
+            { type: "троянди", name: "Меморі лейн", base: 790, color: "Пудрово-рожеві", photo: 0 },
+            { type: "троянди", name: "Ред наомі", base: 850, color: "Оксамитово-червоні", photo: 1 },
+            { type: "троянди", name: "Пенні лейн", base: 750, color: "Кремово-рожеві", photo: 2 },
+            { type: "троянди", name: "Мансувет", base: 820, color: "Персикові", photo: 3 },
+            { type: "троянди", name: "Вайт о'гара", base: 890, color: "Молочно-білі", photo: 4 }
+        ];
+        const products = varieties.flatMap((variety, varietyIndex) => sizes.map((size, sizeIndex) => ({
+            id: `${variety.type === "тюльпани" ? "T" : "R"}${String(varietyIndex % 5 + 1).padStart(2, "0")}-${String(sizeIndex + 1).padStart(2, "0")}`,
+            type: variety.type,
+            name: variety.name,
+            color: variety.color,
+            stems: size.stems,
+            size: size.label,
+            price: Math.round(variety.base * size.multiplier / 10) * 10,
+            image: photoUrls[variety.type === "тюльпани" ? "tulips" : "roses"][variety.photo]
+        })));
+
+        const grid = document.querySelector("#productGrid");
+        const cartPanel = document.querySelector("#cartPanel");
+        const cartBackdrop = document.querySelector("#cartBackdrop");
+        const modalBackdrop = document.querySelector("#modalBackdrop");
+        let activeFilter = "all";
+        let searchQuery = "";
+        let cart = loadCart();
+        let toastTimer;
+
+        function loadCart() {
+            try {
+                const saved = JSON.parse(localStorage.getItem("pelyustka-cart") || "[]");
+                return Array.isArray(saved) ? saved.filter(item => products.some(product => product.id === item.id) && Number.isInteger(item.quantity) && item.quantity > 0) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat("uk-UA").format(price) + " ₴";
+        }
+
+        function renderProducts() {
+            const visible = products.filter(product => {
+                const categoryMatch = activeFilter === "all" || product.type === activeFilter;
+                const searchable = `${product.name} ${product.color} ${product.type} ${product.stems} ${product.size}`.toLocaleLowerCase("uk");
+                return categoryMatch && searchable.includes(searchQuery.toLocaleLowerCase("uk"));
+            });
+            document.querySelector("#resultCount").textContent = `${visible.length} ${visible.length === 1 ? "квіткова історія" : "квіткових історій"}`;
+            if (!visible.length) {
+                grid.innerHTML = '<p class="empty-state">Не знайшли такого букета. Спробуйте іншу назву чи сорт.</p>';
+                return;
+            }
+            grid.innerHTML = visible.map((product, index) => `
+                <article class="product-card" style="animation-delay:${Math.min(index % 8, 7) * 25}ms">
+                    <div class="product-photo"><img src="${product.image}" alt="${product.stems} ${product.color.toLocaleLowerCase("uk")} ${product.type}" loading="lazy"><span class="product-tag">${product.type}</span><span class="product-code">${product.id}</span></div>
+                    <div class="product-info"><p class="product-category">${product.size} · ${product.stems} стебел</p><div class="product-name-row"><h3 class="product-name">${product.name}</h3><span class="product-price">${formatPrice(product.price)}</span></div><p class="product-description">${product.color} · свіжий зріз</p><button class="add-button" type="button" data-add="${product.id}"><span>Додати до кошика</span><span>+</span></button></div>
+                </article>`).join("");
+        }
+
+        function saveCart() {
+            try { localStorage.setItem("pelyustka-cart", JSON.stringify(cart)); } catch { /* Storage may be unavailable in private browsing. */ }
+            renderCart();
+        }
+
+        function renderCart() {
+            const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + products.find(product => product.id === item.id).price * item.quantity, 0);
+            document.querySelector("#cartCount").textContent = itemCount;
+            document.querySelector("#cartTotal").textContent = formatPrice(total);
+            const cartItems = document.querySelector("#cartItems");
+            if (!cart.length) {
+                cartItems.innerHTML = '<div class="cart-empty">Тут поки що порожньо.<br>Оберіть квіти, що вам до душі.</div>';
+                return;
+            }
+            cartItems.innerHTML = cart.map(item => {
+                const product = products.find(entry => entry.id === item.id);
+                return `<article class="cart-item"><img src="${product.image}" alt="" loading="lazy"><div><h3 class="cart-item-name">${product.name}</h3><span class="cart-item-detail">${product.stems} стебел · ${product.type}</span><div class="quantity-control"><button type="button" data-quantity="${product.id}" data-change="-1" aria-label="Зменшити кількість">−</button><span>${item.quantity}</span><button type="button" data-quantity="${product.id}" data-change="1" aria-label="Збільшити кількість">+</button></div></div><div class="cart-item-total">${formatPrice(product.price * item.quantity)}<button class="remove-item" type="button" data-remove="${product.id}">Прибрати</button></div></article>`;
+            }).join("");
+        }
+
+        function showToast(message) {
+            const toast = document.querySelector("#toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 2700);
+        }
+
+        function openCart() {
+            cartPanel.classList.add("open");
+            cartPanel.setAttribute("aria-hidden", "false");
+            cartBackdrop.classList.add("visible");
+            document.body.classList.add("locked");
+            document.querySelector("#closeCart").focus();
+        }
+
+        function closeCart() {
+            cartPanel.classList.remove("open");
+            cartPanel.setAttribute("aria-hidden", "true");
+            cartBackdrop.classList.remove("visible");
+            if (!modalBackdrop.classList.contains("visible")) document.body.classList.remove("locked");
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.remove("visible");
+            if (!cartPanel.classList.contains("open")) document.body.classList.remove("locked");
+        }
+
+        document.querySelector("#tickerTrack").innerHTML = Array.from({ length: 2 }, () => '<span>КВІТИ, ЩО ГОВОРЯТЬ</span><b>✳</b><span>ЗІБРАНО ВРУЧНУ В КИЄВІ</span><b>✳</b><span>СВІЖИЙ ЗРІЗ ЩОДНЯ</span><b>✳</b><span>БІЛЬШЕ ТУРБОТИ, МЕНШЕ ПЛАСТИКУ</span><b>✳</b>').join("");
+        renderProducts();
+        renderCart();
+
+        document.querySelector(".filter-group").addEventListener("click", event => {
+            const button = event.target.closest("[data-filter]");
+            if (!button) return;
+            activeFilter = button.dataset.filter;
+            document.querySelectorAll(".filter-button").forEach(filter => filter.classList.toggle("active", filter === button));
+            renderProducts();
+        });
+        document.querySelector("#searchInput").addEventListener("input", event => { searchQuery = event.target.value.trim(); renderProducts(); });
+        grid.addEventListener("click", event => {
+            const button = event.target.closest("[data-add]");
+            if (!button) return;
+            const existing = cart.find(item => item.id === button.dataset.add);
+            if (existing) existing.quantity += 1;
+            else cart.push({ id: button.dataset.add, quantity: 1 });
+            saveCart();
+            showToast("Квіти додано до кошика. Гарний вибір!");
+        });
+        document.querySelector("#cartItems").addEventListener("click", event => {
+            const quantityButton = event.target.closest("[data-quantity]");
+            const removeButton = event.target.closest("[data-remove]");
+            if (quantityButton) {
+                const item = cart.find(entry => entry.id === quantityButton.dataset.quantity);
+                item.quantity += Number(quantityButton.dataset.change);
+                cart = cart.filter(entry => entry.quantity > 0);
+                saveCart();
+            }
+            if (removeButton) { cart = cart.filter(entry => entry.id !== removeButton.dataset.remove); saveCart(); }
+        });
+        document.querySelector(".open-cart").addEventListener("click", openCart);
+        document.querySelector("#closeCart").addEventListener("click", closeCart);
+        cartBackdrop.addEventListener("click", closeCart);
+        document.querySelector("#checkoutButton").addEventListener("click", () => {
+            if (!cart.length) { showToast("Спочатку оберіть квіти для свого букета."); return; }
+            modalBackdrop.classList.add("visible");
+            document.body.classList.add("locked");
+            document.querySelector('#checkoutForm input[name="name"]').focus();
+        });
+        document.querySelector("#closeModal").addEventListener("click", closeModal);
+        modalBackdrop.addEventListener("click", event => { if (event.target === modalBackdrop) closeModal(); });
+        document.querySelector("#checkoutForm").addEventListener("submit", event => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const orderNumber = Math.floor(1000 + Math.random() * 9000);
+            const total = cart.reduce((sum, item) => sum + products.find(product => product.id === item.id).price * item.quantity, 0);
+            const firstName = String(formData.get("name")).trim().split(/\s+/)[0];
+            cart = [];
+            saveCart();
+            closeModal();
+            closeCart();
+            event.currentTarget.reset();
+            showToast(`Дякуємо, ${firstName}! Заявку №${orderNumber} на ${formatPrice(total)} прийнято. Ми зателефонуємо вам.`);
+        });
+        document.querySelector("#menuToggle").addEventListener("click", event => {
+            const toggle = event.currentTarget;
+            const open = document.querySelector("#navLinks").classList.toggle("open");
+            toggle.setAttribute("aria-expanded", String(open));
+            toggle.setAttribute("aria-label", open ? "Закрити меню" : "Відкрити меню");
+            toggle.textContent = open ? "×" : "☰";
+        });
+        document.querySelectorAll("#navLinks a").forEach(link => link.addEventListener("click", () => {
+            document.querySelector("#navLinks").classList.remove("open");
+            document.querySelector("#menuToggle").setAttribute("aria-expanded", "false");
+            document.querySelector("#menuToggle").setAttribute("aria-label", "Відкрити меню");
+            document.querySelector("#menuToggle").textContent = "☰";
+        }));
+        document.addEventListener("keydown", event => { if (event.key === "Escape") { closeModal(); closeCart(); } });
+    </script>
+</body>
+</html>
